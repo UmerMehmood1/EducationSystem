@@ -2,6 +2,7 @@ package com.appsqueeze.springserver.controller;
 
 import com.appsqueeze.springserver.model.schedule.Schedule;
 import com.appsqueeze.springserver.model.schedule.ScheduleDao;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class ScheduleController {
 
     @GetMapping("/schedules/get-all")
     public List<Schedule> getAllSchedules() {
-        return scheduleDao.getAllSchedules();
+        return scheduleDao.getAllSchedule();
     }
     @PostMapping("/schedule/save")
     public ResponseEntity<Schedule> save(@RequestBody Schedule schedule) {
@@ -48,7 +49,7 @@ public class ScheduleController {
 
     @DeleteMapping("/schedule/delete/{id}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
-        scheduleDao.deleteSchedule(id);
+        scheduleDao.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

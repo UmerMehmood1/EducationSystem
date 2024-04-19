@@ -4,7 +4,7 @@ This is a tutorial project created for teaching Spring boot server and its capab
 
 ### Demo of Running App [UmerMehmood1]
 <center>
-<video src="./SpringBootRunningDemo.mp4>  
+<video src="./SpringBootRunningDemo.mp4">  
 </center>
 ## Server functionalities ##
  - Work with MySQL Database using Spring JPA

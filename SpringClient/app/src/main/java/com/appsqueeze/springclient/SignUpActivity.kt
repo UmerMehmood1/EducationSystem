@@ -25,14 +25,17 @@ class SignUpActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        if (getSignUpState()){
+            startActivity(Intent(this@SignUpActivity, LoginActivity::class.java))
+            savedSignUpState(true)
+            finish()
         }
-        setListeners()
+        else{
+            setListeners()
+        }
     }
 
     private fun setListeners() {
@@ -47,12 +50,21 @@ class SignUpActivity : AppCompatActivity() {
             call!!.enqueue(object : Callback<Student> {
                 override fun onResponse(p0: Call<Student>, p1: Response<Student>) {
                     Snackbar.make(binding.root, "Registered Successfully, ${p1.body()?.username}", Snackbar.LENGTH_LONG).show()
+                    startActivity(Intent(this@SignUpActivity, DashboardActivity::class.java))
+                    savedSignUpState(true)
                 }
 
                 override fun onFailure(p0: Call<Student>, p1: Throwable) {
                 Snackbar.make(binding.root, "Server is down at the moment. Please try again later.", Snackbar.LENGTH_LONG).show()
+                    savedSignUpState(false)
                 }
             })
         }
+    }
+    private fun getSignUpState():Boolean{
+        return this.getSharedPreferences("app", MODE_PRIVATE).getBoolean("isSignedUp",false)
+    }
+    private fun savedSignUpState(state: Boolean){
+        this.getSharedPreferences("app", MODE_PRIVATE).edit().putBoolean("isSignedUp",state).apply()
     }
 }

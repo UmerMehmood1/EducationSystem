@@ -39,12 +39,26 @@ class MyCoursesActivity : AppCompatActivity() {
         setCourseAdapter()
     }
     private fun setCourseAdapter(){
-        val refinedCourses = ArrayList<Course>()
-        courseAdapter = CourseAdapter(this@MyCoursesActivity, refinedCourses)
-        binding.courseRecyclerView.adapter = courseAdapter
-        val layoutManager = LinearLayoutManager(this@MyCoursesActivity)
-        binding.courseRecyclerView.layoutManager = layoutManager
-
+        val call: Call<MutableList<Course>>? = apiService.allCourses
+        call?.enqueue(object : Callback<MutableList<Course>> {
+            override fun onResponse(call: Call<MutableList<Course>>, response: Response<MutableList<Course>>) {
+                if (response.isSuccessful) {
+                    val courses = response.body()
+                    courses?.let {
+                        // Update the adapter with the new data
+                        courseAdapter = CourseAdapter(this@MyCoursesActivity, it)
+                        binding.courseRecyclerView.adapter = courseAdapter
+                        val layoutManager = LinearLayoutManager(this@MyCoursesActivity)
+                        binding.courseRecyclerView.layoutManager = layoutManager
+                    }
+                } else {
+                    Snackbar.make(binding.root, "Please check internet connection or Server is down", Snackbar.LENGTH_LONG).show()
+                }
+            }
+            override fun onFailure(p0: Call<MutableList<Course>>, p1: Throwable) {
+                Snackbar.make(binding.root, "Please check internet connection or Server is down", Snackbar.LENGTH_LONG).show()
+            }
+        })
     }
     private fun setListeners(){
         binding.courseName.addTextChangedListener(object : TextWatcher{
@@ -59,7 +73,7 @@ class MyCoursesActivity : AppCompatActivity() {
                             val courses = response.body()
                             val refinedCourses = ArrayList<Course>()
                             for (course in courses!!){
-                                if (course.name.contains(p0.toString())){
+                                if (course.name.contains(p0.toString(), ignoreCase = true)){
                                     refinedCourses.add(course)
                                 }
                             }

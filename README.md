@@ -7,7 +7,7 @@ This is a tutorial project created for teaching Spring boot server and its capab
  - Work with MySQL Database using Spring JPA
  - Provide REST API using Spring Web
 
-[![Demo of Running App](./SpringBootRunningDemo.png)]
+![Demo of Running App](./SpringBootRunningDemo.png)
 
 ## Client functionalities ##
  - Provides a form to create new student
